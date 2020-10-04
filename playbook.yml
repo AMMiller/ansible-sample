@@ -8,30 +8,22 @@
         pkg: default-jdk
         state: present
         update_cache: true
-      notify:
-        - install jdk
 
     - name: создаем группу tomcat
       group:
         name: tomcat
-      notify:
-        - Создаем группу tomcat
 
     - name: пользователь tomcat
       user:
         name: tomcat
         group: tomcat
         createhome: false
-      notify:
-        - Создаем пользователя tomcat
 
     - name: "папка для томката {{ tomcat_dir }}"
       file:
         path: "{{ tomcat_dir }}"
         state: directory
         mode: 0755
-      notify:
-        - Создаем папку
 
     - name: качаем и распаковываем
       unarchive:
@@ -39,8 +31,6 @@
         dest: "{{ tomcat_dir }}"
         remote_src: true
         extra_opts: [--strip-components=1]
-      notify:
-        - Распаковываем Томкат
 
     - name: Права
       file:
@@ -50,13 +40,9 @@
         mode: "u+rwx,g+rx,o=rx"
         recurse: true
         state: directory
-      notify:
-        - Назначаем права
 
     - name: Стартуем томкат
       command: "{{ tomcat_dir }}/bin/startup.sh"
-      notify:
-        - Собираем проект
 
 
 - hosts: maven
@@ -66,20 +52,14 @@
         pkg: maven
         state: installed
         update_cache: true
-      notify:
-        - Устанавливаем maven
 
     - name: Клонируем проект
       git:
         repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
         dest: /tmp
-      notify:
-        - Клонируем проект
 
     - name: Собираем проект
       command: mvn package -f /tmp/boxfuse-sample-java-war-hello/pom.xml
-      notify:
-        - Собираем проект
 
     - name: Перетаскиваем проект на прод
       synchronize:
