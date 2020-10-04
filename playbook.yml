@@ -53,6 +53,9 @@
         state: installed
         update_cache: true
 
+    - name: Подчищаем /tmp
+      command: rm -rf /tmp/boxfuse-sample-java-war-hello/
+
     - name: Клонируем проект
       git:
         repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
