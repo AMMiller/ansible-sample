@@ -2,26 +2,26 @@
 - hosts: tomcat
   tasks:
     - name: Устанавливаем Tomcat
-      apt: 
-        pkg: tomcat 
-        state: installed 
-        update_cache: yes
+      apt:
+        pkg: tomcat
+        state: installed
+        update_cache: true
       notify:
         - start tomcat
 
 - hosts: maven
   tasks:
     - name: Устанавливаем Maven
-      apt: 
-        pkg: maven 
-        state: installed 
-        update_cache: yes
+      apt:
+        pkg: maven
+        state: installed
+        update_cache: true
       notify:
         - Устанавливаем maven
 
     - name: Клонируем проект
-      git: 
-        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git 
+      git:
+        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
         dest: /tmp
       notify:
         - Клонируем проект
