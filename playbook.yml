@@ -54,7 +54,7 @@
         - Назначаем права
 
     - name: Стартуем томкат
-      command: {{ tomcat_dir }}/bin/startup.sh
+      command: "{{ tomcat_dir }}/bin/startup.sh"
       notify:
         - Собираем проект
 
