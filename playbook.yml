@@ -1,0 +1,41 @@
+---
+- hosts: tomcat
+  tasks:
+    - name: Устанавливаем Tomcat
+      apt: 
+        pkg: tomcat 
+        state: installed 
+        update_cache: yes
+      notify:
+        - start tomcat
+
+- hosts: maven
+  tasks:
+    - name: Устанавливаем Maven
+      apt: 
+        pkg: maven 
+        state: installed 
+        update_cache: yes
+      notify:
+        - start maven
+
+    - name: Клонируем проект
+      git: 
+        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git 
+        dest: /tmp
+      notify:
+        - Клонируем проект
+
+    - name: Собираем проект
+      command: mvn package -f /tmp/boxfuse-sample-java-war-hello/pom.xml
+      notify:
+        - Собираем проект
+
+    - name: Перетаскиваем проект на прод
+      synchronize:
+        src: /tmp/boxfuse-sample-java-war-hello/target/hello-1.0/*
+        dest: /usr/local/tomcat/webapps/ROOT
+        mode: pull
+      delegate_to: tomcat
+
+---
