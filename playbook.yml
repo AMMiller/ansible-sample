@@ -1,13 +1,63 @@
 ---
 - hosts: tomcat
+  vars:
+    tomcat_dir: /usr/share/tomcat9
   tasks:
-    - name: Устанавливаем Tomcat
+    - name: Устанавливаем JDK
       apt:
-        pkg: tomcat
-        state: installed
+        pkg: default-jdk
+        state: present
         update_cache: true
       notify:
-        - start tomcat
+        - install jdk
+
+    - name: создаем группу tomcat
+      group:
+        name: tomcat
+      notify:
+        - Создаем группу tomcat
+  
+    - name: пользователь tomcat
+      user:
+        name: tomcat
+        group: tomcat
+        createhome: false
+      notify:
+        - Создаем пользователя tomcat
+
+    - name: папка для томката {{ tomcat_dir }}
+      file:
+        path: {{ tomcat_dir }}
+        state: directory
+        mode: 0755
+      notify:
+        - Создаем папку
+  
+    - name: качаем и распаковываем
+      unarchive:
+        src: https://apache-mirror.rbc.ru/pub/apache/tomcat/tomcat-9/v9.0.38/bin/apache-tomcat-9.0.38.tar.gz
+        dest: {{ tomcat_dir }}
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+      notify:
+        - Распаковываем Томкат
+
+    - name: Права
+      file:
+        path: {{ tomcat_dir }}
+        owner: tomcat
+        group: tomcat
+        mode: "u+rwx,g+rx,o=rx"
+        recurse: yes
+        state: directory
+      notify:
+        - Назначаем права
+
+    - name: Стартуем томкат
+      command: {{ tomcat_dir }}/bin/startup.sh
+      notify:
+        - Собираем проект
+
 
 - hosts: maven
   tasks:
@@ -37,5 +87,3 @@
         dest: /usr/local/tomcat/webapps/ROOT
         mode: pull
       delegate_to: tomcat
-
----
