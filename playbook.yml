@@ -17,7 +17,7 @@
         state: installed 
         update_cache: yes
       notify:
-        - start maven
+        - Устанавливаем maven
 
     - name: Клонируем проект
       git: 
