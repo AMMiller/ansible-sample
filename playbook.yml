@@ -46,8 +46,8 @@
 
 
 - hosts: maven
-    vars:
-      proj_dir: /tmp/boxfuse-sample-java-war-hello
+  vars:
+    proj_dir: /tmp/boxfuse-sample-java-war-hello
   tasks:
     - name: Устанавливаем Maven
       apt:
