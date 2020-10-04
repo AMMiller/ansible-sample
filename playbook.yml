@@ -16,7 +16,7 @@
         name: tomcat
       notify:
         - Создаем группу tomcat
-  
+
     - name: пользователь tomcat
       user:
         name: tomcat
@@ -25,30 +25,30 @@
       notify:
         - Создаем пользователя tomcat
 
-    - name: папка для томката {{ tomcat_dir }}
+    - name: "папка для томката {{ tomcat_dir }}"
       file:
-        path: {{ tomcat_dir }}
+        path: "{{ tomcat_dir }}"
         state: directory
         mode: 0755
       notify:
         - Создаем папку
-  
+
     - name: качаем и распаковываем
       unarchive:
         src: https://apache-mirror.rbc.ru/pub/apache/tomcat/tomcat-9/v9.0.38/bin/apache-tomcat-9.0.38.tar.gz
-        dest: {{ tomcat_dir }}
-        remote_src: yes
+        dest: "{{ tomcat_dir }}"
+        remote_src: true
         extra_opts: [--strip-components=1]
       notify:
         - Распаковываем Томкат
 
     - name: Права
       file:
-        path: {{ tomcat_dir }}
+        path: "{{ tomcat_dir }}"
         owner: tomcat
         group: tomcat
         mode: "u+rwx,g+rx,o=rx"
-        recurse: yes
+        recurse: true
         state: directory
       notify:
         - Назначаем права
