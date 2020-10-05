@@ -46,7 +46,7 @@
 - hosts: tomcat
   vars:
     tomcat_dir: /usr/share/tomcat9
-    www_root: "{{ tomcat_dir }}/webapps/ROOT"
+    www_root: "/usr/share/tomcat9-root/default-root"
 
   tasks:
     - name: Подчищаем корневую директорию томката
