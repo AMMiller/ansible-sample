@@ -84,6 +84,7 @@
         path: "{{ tomcat_dir }}/conf/server.xml"
         regexp: 'port="8080"'
         line: 'port="80"'
+        state: present
 
     - name: Права
       file:
