@@ -52,12 +52,9 @@
     - name: Ставим Tomcat 9
       become: yes
       apt:
-        pkg: {{ item }}
+        pkg: tomcat9
         state: latest 
         update_cache: yes 
-        cache_valid_time: 3600
-      with_items:
-        - tomcat9
 
     - name: Подчищаем корневую директорию томката
       command: 
