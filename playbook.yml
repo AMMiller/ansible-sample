@@ -32,13 +32,14 @@
       command: "mvn package -f {{ proj_dir }}/pom.xml"
 
     - name: Упаковываем
-      command: "tar -czf /tmp/hello.tar.gz {{ proj_dir }}/target/hello-1.0"
-      warn: false
+      command: 
+        cmd: "tar -czf /tmp/hello.tar.gz {{ proj_dir }}/target/hello-1.0"
+        warn: false
 
     - name: Утягиваем проект
       copy:
         src: "/tmp/hello.tar.gz"
-        dest: "/tmp"
+        dest: "/tmp/hello.tar.gz"
         remote_src: true
 
 
