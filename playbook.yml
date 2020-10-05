@@ -110,10 +110,15 @@
         cmd: "rm -rf {{ www_root }}/*"
         warn: false
 
-    - name: разворачиваем в корень
+    - name: разворачиваем проект в /tmp
       unarchive:
         src: /tmp/hello.tar.gz
         dest: "{{ www_root }}"
+
+    - name: И копируем в корневую директорию томката
+      command:
+        cmd: "cp -R /tmp/boxfuse-sample-java-war-hello/target/hello-1.0/* {{ www_root }}/"
+        warn: false
 
     - name: Останавливаем томкат
       shell: "{{ tomcat_dir }}/bin/shutdown.sh"
