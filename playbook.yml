@@ -46,7 +46,10 @@
         extra_opts: [--strip-components=1]
 
     - name: назначаем томкат на 80 порт
-      command: "sed -i 's/ port=\"8080\"/ port=\"80\"/' {{ tomcat_dir }}/conf/server.xml"
+      lineinfile:
+        path: "{{ tomcat_dir }}/conf/server.xml"
+        regexp: 'port=\"8080\"'
+        line: 'port=\"80\"'
 
     - name: Права
       file:
@@ -70,10 +73,10 @@
     - name: Передаем ключ от tomcata для копирования файлов
       copy:
         src: "/tmp/{{ssh_key_filename}}.pub"
-        dest: "/tmp"
+        dest: "~/.ssh/authorized_keys"
 
-    - name: Добавляем ключ в доверенные
-      command: "cat /tmp/{{ssh_key_filename}}.pub >> ~/.ssh/authorized_keys"
+    # - name: Добавляем ключ в доверенные
+    #  command: "cat /tmp/{{ssh_key_filename}}.pub >> ~/.ssh/authorized_keys"
 
     - name: Устанавливаем Maven
       apt:
