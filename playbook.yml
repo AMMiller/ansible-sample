@@ -40,6 +40,7 @@
       fetch:
         src: "/tmp/hello.tar.gz"
         dest: "/tmp/"
+        flat: true        
 
 # prod
 - hosts: tomcat
