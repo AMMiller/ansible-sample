@@ -1,8 +1,27 @@
 ---
+- hosts: all
+  remote_user: root
+  vars:
+    ssh_key_filename: id_rsa_for_maven
+
 - hosts: tomcat
   vars:
     tomcat_dir: /usr/share/tomcat9
+    
   tasks:
+    - name: генерим SSH ключ "{{ssh_key_filename}}"
+      openssh_keypair:
+        path: "~/.ssh/{{ssh_key_filename}}"
+        type: rsa
+        size: 4096
+        state: present
+        force: no
+  
+    - name: Утягиваем ключ
+      fetch:
+        src: "~/.ssh/{{ssh_key_filename}}.pub"
+        dest: "/tmp/{{ssh_key_filename}}.pub"
+        flat: yes
     - name: Устанавливаем JDK
       apt:
         pkg: default-jdk
@@ -32,6 +51,9 @@
         remote_src: true
         extra_opts: [--strip-components=1]
 
+    - name: назначаем томкат на 80 порт
+      command: "sed -i 's/ port=\"8080\"/ port=\"80\"/' {{ tomcat_dir }}/conf/server.xml"
+
     - name: Права
       file:
         path: "{{ tomcat_dir }}"
@@ -48,11 +70,20 @@
 - hosts: maven
   vars:
     proj_dir: /tmp/boxfuse-sample-java-war-hello
+
   tasks:
+    - name: Передаем ключ от tomcata для копирования файлов
+      copy: 
+        src: "/tmp/{{ssh_key_filename}}.pub"
+        dest: "/tmp"
+
+    - name: Добавляем ключ в доверенные
+      command: "cat /tmp/{{ssh_key_filename}}.pub >> ~/.ssh/authorized_keys"
+
     - name: Устанавливаем Maven
       apt:
         pkg: maven
-        state: installed
+        state: present
         update_cache: true
 
     - name: Подчищаем /tmp
@@ -74,3 +105,4 @@
         dest: /usr/local/tomcat/webapps/ROOT
         mode: pull
       delegate_to: tomcat
+  
