@@ -126,7 +126,7 @@
     - name: Корневая директория томката есть
       file:
         path: "{{ www_root }}"
-        state: present
+        state: directory
 
     - name: загружаем и разворачиваем проект
       unarchive:
