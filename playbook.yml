@@ -115,5 +115,8 @@
         src: /tmp/hello.tar.gz
         dest: "{{ www_root }}"
 
+    - name: Останавливаем томкат
+      shell: "{{ tomcat_dir }}/bin/shutdown.sh"
+
     - name: Стартуем томкат
       shell: "nohup {{ tomcat_dir }}/bin/startup.sh"
