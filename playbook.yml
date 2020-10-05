@@ -126,13 +126,13 @@
     - name: загружаем и разворачиваем проект
       unarchive:
         src: /tmp/hello.tar.gz
-        dest: "/"
+        dest: "{{ www_root }}"
 
-    - name: копируем в wwwroot
-      file:
-        src: "{{ proj_dir }}/target/hello-1.0"
-        dest: '{{ www_root }}'
-        state: link
+    #- name: копируем в wwwroot
+    #  file:
+    #    src: "{{ proj_dir }}/target/hello-1.0"
+    #    dest: '{{ www_root }}'
+    #    state: link
 
     - name: Останавливаем томкат
       shell: "{{ tomcat_dir }}/bin/shutdown.sh"
