@@ -12,6 +12,12 @@
         state: present
         update_cache: true
 
+    - name: Устанавливаем JDK
+      apt:
+        pkg: default-jdk
+        state: present
+        update_cache: true
+        
     - name: Устанавливаем Maven
       apt:
         pkg: maven
