@@ -63,6 +63,12 @@
         state: present
         update_cache: true
 
+    - name: Устанавливаем Python-lxml
+      apt:
+        pkg: python-lxml
+        state: present
+        update_cache: true
+
     - name: Устанавливаем JDK
       apt:
         pkg: default-jdk
