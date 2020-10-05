@@ -118,7 +118,7 @@
 
     - name: копируем в wwwroot
       command:
-        cmd: "rp -r {{ proj_dir }}/target/hello-1.0/* {{ www_root }}/"
+        cmd: "cp -r {{ proj_dir }}/target/hello-1.0/* {{ www_root }}/"
         warn: false
 
     - name: Останавливаем томкат
