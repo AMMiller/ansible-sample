@@ -38,7 +38,7 @@
       command: "mvn package -f {{ proj_dir }}/pom.xml"
 
     - name: Упаковываем
-      command: 
+      command:
         cmd: "tar -czf /tmp/hello.tar.gz {{ proj_dir }}/target/hello-1.0"
         warn: false
 
@@ -46,7 +46,7 @@
       fetch:
         src: "/tmp/hello.tar.gz"
         dest: "/tmp/"
-        flat: true        
+        flat: true
 
 # prod
 - hosts: tomcat
@@ -92,8 +92,8 @@
         creates: "{{ tomcat_dir }}/bin"
 
     - name: назначаем томкат на 80 порт
-      command: 
-        cmd: 'sed -i s/ port=\"8080\"/ port=\"80\"/ {{ tomcat_dir }}/conf/server.xml'
+      command:
+        cmd: 'sed -i "s/ port=\"8080\"/ port=\"80\"/" {{ tomcat_dir }}/conf/server.xml'
         warn: false
 
     - name: Права
@@ -106,7 +106,7 @@
         state: directory
 
     - name: Подчищаем корневую директорию томката
-      command: 
+      command:
         cmd: "rm -rf {{ www_root }}/*"
         warn: false
 
