@@ -51,8 +51,8 @@
   tasks:
     - name: Ставим Tomcat 9
       become: yes
-      apt: d
-        pkg: {{ item }} 
+      apt:
+        pkg: {{ item }}
         state: latest 
         update_cache: yes 
         cache_valid_time: 3600
