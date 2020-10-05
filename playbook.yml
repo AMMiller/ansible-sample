@@ -37,11 +37,9 @@
         warn: false
 
     - name: Утягиваем проект
-      copy:
+      fetch:
         src: "/tmp/hello.tar.gz"
         dest: "/tmp/hello.tar.gz"
-        remote_src: true
-
 
 # prod
 - hosts: tomcat
