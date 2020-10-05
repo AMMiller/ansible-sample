@@ -6,6 +6,11 @@
     proj_dir: /tmp/boxfuse-sample-java-war-hello
 
   tasks:
+    - name: Устанавливаем Python
+      apt:
+        pkg: python
+        state: present
+        update_cache: true
 
     - name: Устанавливаем Maven
       apt:
