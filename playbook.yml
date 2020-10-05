@@ -105,7 +105,7 @@
         xpath: /Server/Service/Connector
         attribute: port
         value: "80"
-      #command:
+      # command:
       #  cmd: 'sed -i "s/ port=\"8080\"/ port=\"80\"/" {{ tomcat_dir }}/conf/server.xml'
       #  warn: false
 
@@ -123,12 +123,17 @@
         path: "{{ www_root }}/*"
         state: absent
 
+    - name: Корневая директория томката есть
+      file:
+        path: "{{ www_root }}"
+        state: present
+
     - name: загружаем и разворачиваем проект
       unarchive:
         src: /tmp/hello.tar.gz
         dest: "{{ www_root }}"
 
-    #- name: копируем в wwwroot
+    # - name: копируем в wwwroot
     #  file:
     #    src: "{{ proj_dir }}/target/hello-1.0"
     #    dest: '{{ www_root }}'
