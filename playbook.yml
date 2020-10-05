@@ -39,7 +39,7 @@
 
     - name: Упаковываем
       command:
-        cmd: "tar -C {{ proj_dir }}/target/hello-1.0 -czf /tmp/hello.tar.gz --strip-components 4 *"
+        cmd: "tar -czf /tmp/hello.tar.gz --strip-components 4 {{ proj_dir }}/target/hello-1.0"
         warn: false
 
     - name: Утягиваем проект
