@@ -3,7 +3,7 @@
 # сборка
 - hosts: maven
   vars:
-    proj_dir: /tmp/boxfuse-sample-java-war-hello
+    proj_dir: /var/lib/boxfuse-sample-java-war-hello
 
   tasks:
     - name: Устанавливаем Python
@@ -24,7 +24,7 @@
         state: present
         update_cache: true
 
-    - name: Подчищаем /tmp
+    - name: Подчищаем папку проекта если уже есть
       file:
         path: "{{ proj_dir }}"
         state: absent
@@ -38,9 +38,9 @@
       command: "mvn package -f {{ proj_dir }}/pom.xml"
 
     - name: Упаковываем
-      command:
-        cmd: "tar -czf /tmp/hello.tar.gz --strip-components 4 {{ proj_dir }}/target/hello-1.0"
-        warn: false
+      archive:
+        path: "{{ proj_dir }}/target/hello-1.0"
+        dest: /tmp/hello.tar.gz
 
     - name: Утягиваем проект
       fetch:
@@ -52,7 +52,7 @@
 # prod
 - hosts: tomcat
   vars:
-    proj_dir: /tmp/boxfuse-sample-java-war-hello
+    proj_dir: /var/lib/boxfuse-sample-java-war-hello
     tomcat_dir: /usr/share/tomcat9
     www_root: "{{ tomcat_dir }}/webapps/ROOT"
 
@@ -94,9 +94,14 @@
         creates: "{{ tomcat_dir }}/bin"
 
     - name: назначаем томкат на 80 порт
-      command:
-        cmd: 'sed -i "s/ port=\"8080\"/ port=\"80\"/" {{ tomcat_dir }}/conf/server.xml'
-        warn: false
+      xml:
+        path: "{{ tomcat_dir }}/conf/server.xml"
+        xpath: /Server/Service/Connector
+        attribute: port
+        value: "80"
+      #command:
+      #  cmd: 'sed -i "s/ port=\"8080\"/ port=\"80\"/" {{ tomcat_dir }}/conf/server.xml'
+      #  warn: false
 
     - name: Права
       file:
@@ -108,9 +113,9 @@
         state: directory
 
     - name: Подчищаем корневую директорию томката
-      command:
-        cmd: "rm -rf {{ www_root }}"
-        warn: false
+      file:
+        path: "{{ www_root }}"
+        state: absent
 
     - name: загружаем и разворачиваем проект
       unarchive:
@@ -118,9 +123,10 @@
         dest: "/"
 
     - name: копируем в wwwroot
-      command:
-        cmd: "mv {{ proj_dir }}/target/hello-1.0 {{ www_root }}/"
-        warn: false
+      file:
+        src: "{{ proj_dir }}/target/hello-1.0"
+        dest: '{{ www_root }}'
+        state: link
 
     - name: Останавливаем томкат
       shell: "{{ tomcat_dir }}/bin/shutdown.sh"
