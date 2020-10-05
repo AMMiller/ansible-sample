@@ -7,7 +7,7 @@
 - hosts: tomcat
   vars:
     tomcat_dir: /usr/share/tomcat9
-    
+
   tasks:
     - name: генерим SSH ключ
       openssh_keypair:
@@ -15,13 +15,13 @@
         type: rsa
         size: 4096
         state: present
-        force: no
-  
+        force: false
+
     - name: Утягиваем ключ
       fetch:
         src: "~/.ssh/{{ssh_key_filename}}.pub"
         dest: "/tmp/{{ssh_key_filename}}.pub"
-        flat: yes
+        flat: true
     - name: Устанавливаем JDK
       apt:
         pkg: default-jdk
@@ -73,7 +73,7 @@
 
   tasks:
     - name: Передаем ключ от tomcata для копирования файлов
-      copy: 
+      copy:
         src: "/tmp/{{ssh_key_filename}}.pub"
         dest: "/tmp"
 
@@ -105,4 +105,3 @@
         dest: /usr/local/tomcat/webapps/ROOT
         mode: pull
       delegate_to: tomcat
-  
