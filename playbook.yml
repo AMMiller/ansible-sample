@@ -108,7 +108,7 @@
 
     - name: Подчищаем корневую директорию томката
       command:
-        cmd: "rm -rf {{ www_root }}/*"
+        cmd: "rm -rf {{ www_root }}"
         warn: false
 
     - name: загружаем и разворачиваем проект
@@ -118,7 +118,7 @@
 
     - name: копируем в wwwroot
       command:
-        cmd: "cp -r {{ proj_dir }}/target/hello-1.0/* {{ www_root }}/"
+        cmd: "mv {{ proj_dir }}/target/hello-1.0 {{ www_root }}/"
         warn: false
 
     - name: Останавливаем томкат
