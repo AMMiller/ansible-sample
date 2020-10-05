@@ -92,9 +92,9 @@
         creates: "{{ tomcat_dir }}/bin"
 
     - name: назначаем томкат на 80 порт
-        command: 
-          cmd: 'sed -i s/ port=\"8080\"/ port=\"80\"/ {{ tomcat_dir }}/conf/server.xml'
-          warn: false
+      command: 
+        cmd: 'sed -i s/ port=\"8080\"/ port=\"80\"/ {{ tomcat_dir }}/conf/server.xml'
+        warn: false
 
     - name: Права
       file:
