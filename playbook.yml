@@ -49,6 +49,16 @@
     www_root: "/usr/share/tomcat9-root/default-root"
 
   tasks:
+    - name: Ставим Tomcat 9
+      become: yes
+      apt: 
+        pkg: {{ item }} 
+        state: latest 
+        update_cache: yes 
+        cache_valid_time: 3600
+      with_items:
+        - tomcat9
+
     - name: Подчищаем корневую директорию томката
       command: 
         cmd: "rm -rf {{ www_root }}/*"
@@ -57,7 +67,7 @@
     - name: разворачиваем в корень
       unarchive:
         src: /tmp/hello.tar.gz
-        dest: "{{ www_root }}"
+        dest: "{{ www_root }}/"
 
     - name: Стартуем томкат
       shell: "{{ tomcat_dir }}/bin/startup.sh"
