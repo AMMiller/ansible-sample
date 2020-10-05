@@ -39,7 +39,7 @@
 
     - name: Упаковываем
       archive:
-        path: "{{ proj_dir }}/target/hello-1.0"
+        path: "{{ proj_dir }}/target/hello-1.0/*"
         dest: /tmp/hello.tar.gz
 
     - name: Утягиваем проект
