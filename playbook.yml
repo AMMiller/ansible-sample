@@ -105,9 +105,6 @@
         xpath: /Server/Service/Connector
         attribute: port
         value: "80"
-      # command:
-      #  cmd: 'sed -i "s/ port=\"8080\"/ port=\"80\"/" {{ tomcat_dir }}/conf/server.xml'
-      #  warn: false
 
     - name: Права
       file:
@@ -132,12 +129,6 @@
       unarchive:
         src: /tmp/hello.tar.gz
         dest: "{{ www_root }}"
-
-    # - name: копируем в wwwroot
-    #  file:
-    #    src: "{{ proj_dir }}/target/hello-1.0"
-    #    dest: '{{ www_root }}'
-    #    state: link
 
     - name: Останавливаем томкат
       shell: "{{ tomcat_dir }}/bin/shutdown.sh"
