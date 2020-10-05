@@ -39,7 +39,7 @@
     - name: Утягиваем проект
       fetch:
         src: "/tmp/hello.tar.gz"
-        dest: "/tmp/hello.tar.gz"
+        dest: "/tmp/"
 
 # prod
 - hosts: tomcat
