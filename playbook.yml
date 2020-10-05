@@ -51,7 +51,7 @@
   tasks:
     - name: Ставим Tomcat 9
       become: yes
-      apt: 
+      apt: d
         pkg: {{ item }} 
         state: latest 
         update_cache: yes 
