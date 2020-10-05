@@ -51,6 +51,7 @@
 # prod
 - hosts: tomcat
   vars:
+    proj_dir: /tmp/boxfuse-sample-java-war-hello
     tomcat_dir: /usr/share/tomcat9
     www_root: "{{ tomcat_dir }}/webapps/ROOT"
 
@@ -110,10 +111,15 @@
         cmd: "rm -rf {{ www_root }}/*"
         warn: false
 
-    - name: разворачиваем собранный проект в корень томката
+    - name: загружаем и разворачиваем проект
       unarchive:
         src: /tmp/hello.tar.gz
-        dest: "{{ www_root }}"
+        dest: "/"
+
+    - name: копируем в wwwroot
+      command:
+        cmd: "rp -r {{ proj_dir }}/target/hello-1.0/* {{ www_root }}/"
+        warn: false
 
     - name: Останавливаем томкат
       shell: "{{ tomcat_dir }}/bin/shutdown.sh"
