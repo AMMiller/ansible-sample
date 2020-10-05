@@ -9,7 +9,7 @@
     tomcat_dir: /usr/share/tomcat9
     
   tasks:
-    - name: генерим SSH ключ "{{ssh_key_filename}}"
+    - name: генерим SSH ключ
       openssh_keypair:
         path: "~/.ssh/{{ssh_key_filename}}"
         type: rsa
