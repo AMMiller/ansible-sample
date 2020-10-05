@@ -113,7 +113,7 @@
     - name: разворачиваем проект в /tmp
       unarchive:
         src: /tmp/hello.tar.gz
-        dest: "{{ www_root }}"
+        dest: "/"
 
     - name: И копируем в корневую директорию томката
       command:
