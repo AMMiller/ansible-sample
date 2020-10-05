@@ -39,7 +39,7 @@
 
     - name: Упаковываем
       command:
-        cmd: "tar -czf /tmp/hello.tar.gz {{ proj_dir }}/target/hello-1.0"
+        cmd: "tar -czf /tmp/hello.tar.gz {{ proj_dir }}/target/hello-1.0/*"
         warn: false
 
     - name: Утягиваем проект
@@ -110,15 +110,10 @@
         cmd: "rm -rf {{ www_root }}/*"
         warn: false
 
-    - name: разворачиваем проект в /tmp
+    - name: разворачиваем собранный проект в корень томката
       unarchive:
         src: /tmp/hello.tar.gz
-        dest: "/"
-
-    - name: И копируем в корневую директорию томката
-      command:
-        cmd: "cp -R /tmp/boxfuse-sample-java-war-hello/target/hello-1.0/* {{ www_root }}/"
-        warn: false
+        dest: "{{ www_root }}"
 
     - name: Останавливаем томкат
       shell: "{{ tomcat_dir }}/bin/shutdown.sh"
