@@ -49,50 +49,6 @@
     www_root: "{{ tomcat_dir }}/webapps/ROOT"
 
   tasks:
-    - name: Устанавливаем JDK
-      apt:
-        pkg: default-jdk
-        state: present
-        update_cache: true
-
-    - name: создаем группу tomcat
-      group:
-        name: tomcat
-
-    - name: пользователь tomcat
-      user:
-        name: tomcat
-        group: tomcat
-        createhome: false
-
-    - name: "папка для томката {{ tomcat_dir }}"
-      file:
-        path: "{{ tomcat_dir }}"
-        state: directory
-        mode: 0755
-
-    - name: качаем и распаковываем
-      unarchive:
-        src: https://apache-mirror.rbc.ru/pub/apache/tomcat/tomcat-9/v9.0.38/bin/apache-tomcat-9.0.38.tar.gz
-        dest: "{{ tomcat_dir }}"
-        remote_src: true
-        extra_opts: [--strip-components=1]
-
-    - name: назначаем томкат на 80 порт
-      lineinfile:
-        path: "{{ tomcat_dir }}/conf/server.xml"
-        regexp: 'port=\"8080\"'
-        line: 'port=\"80\"'
-
-    - name: Права
-      file:
-        path: "{{ tomcat_dir }}"
-        owner: tomcat
-        group: tomcat
-        mode: "u+rwx,g+rx,o=rx"
-        recurse: true
-        state: directory
-
     - name: Подчищаем корневую директорию томката
       command: 
         cmd: "rm -rf {{ www_root }}/*"
@@ -104,4 +60,4 @@
         dest: "{{ www_root }}"
 
     - name: Стартуем томкат
-      command: "{{ tomcat_dir }}/bin/startup.sh"
+      shell: "{{ tomcat_dir }}/bin/startup.sh"
