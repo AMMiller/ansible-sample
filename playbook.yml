@@ -99,7 +99,9 @@
 
     - name: Перетаскиваем проект на прод
       synchronize:
-        src: "{{ proj_dir }}/target/hello-1.0/*"
+        src: > 
+          "rsync://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}/{{ proj_dir }}/target/hello-1.0/*"
         dest: /usr/local/tomcat/webapps/ROOT
         mode: pull
+        recursive: true
       delegate_to: tomcat
