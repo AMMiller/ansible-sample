@@ -1,8 +1,46 @@
 ---
+
+# сборка
+- hosts: maven
+  vars:
+    proj_dir: /tmp/boxfuse-sample-java-war-hello
+
+  tasks:
+
+    - name: Устанавливаем Maven
+      apt:
+        pkg: maven
+        state: present
+        update_cache: true
+
+    - name: Подчищаем /tmp
+      file:
+        path: "{{ proj_dir }}"
+        state: absent
+
+    - name: Клонируем проект
+      git:
+        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
+        dest: "{{ proj_dir }}"
+
+    - name: Собираем проект
+      command: "mvn package -f {{ proj_dir }}/pom.xml"
+
+    - name: Упаковываем
+      command: "tar -czf /tmp/hello.tar.gz {{ proj_dir }}/target/hello-1.0"
+
+    - name: Утягиваем проект
+      copy:
+        src: "/tmp/hello.tar.gz"
+        dest: "/tmp"
+        remote_src: true
+
+
+# prod
 - hosts: tomcat
   vars:
     tomcat_dir: /usr/share/tomcat9
-    ssh_key_filename: id_rsa_for_maven
+    www_root: /usr/local/tomcat/webapps/ROOT
 
   tasks:
     - name: Устанавливаем JDK
@@ -49,58 +87,16 @@
         recurse: true
         state: directory
 
+    - name: Подчищаем корневую директорию томката
+      command: "rm -rf {{ www_root }}/*"
+
+    - name: копируем проект
+      copy:
+        src: "/tmp/hello.tar.gz"
+        dest: "/tmp"
+
+    - name: разворачиваем в корень
+      command: "tar -xf /tmp/hello.tar.gz -C {{ www_root }}"
+
     - name: Стартуем томкат
       command: "{{ tomcat_dir }}/bin/startup.sh"
-
-
-- hosts: maven
-  vars:
-    proj_dir: /tmp/boxfuse-sample-java-war-hello
-    ssh_key_filename: id_rsa_for_maven
-
-  tasks:
-    - name: генерим SSH ключ командой тк версия ансибля < 2.8
-      command: "ssh-keygen -f ~/.ssh/{{ssh_key_filename}} -P '' "
-      args:
-        creates: "~/.ssh/{{ssh_key_filename}}"
-
-    - name: Утягиваем ключ
-      fetch:
-        src: "~/.ssh/{{ssh_key_filename}}.pub"
-        dest: "/tmp/{{ssh_key_filename}}.pub"
-        flat: true
-
-    - name: Передаем ключ от mavena для копирования файлов
-      copy:
-        src: "/tmp/{{ssh_key_filename}}.pub"
-        dest: "~/.ssh/authorized_keys"
-      delegate_to: tomcat
-
-    # - name: Добавляем ключ в доверенные
-    #  command: "cat /tmp/{{ssh_key_filename}}.pub >> ~/.ssh/authorized_keys"
-
-    - name: Устанавливаем Maven
-      apt:
-        pkg: maven
-        state: present
-        update_cache: true
-
-    - name: Подчищаем /tmp
-      file:
-        path: "{{ proj_dir }}"
-        state: absent
-
-    - name: Клонируем проект
-      git:
-        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
-        dest: "{{ proj_dir }}"
-
-    - name: Собираем проект
-      command: "mvn package -f {{ proj_dir }}/pom.xml"
-
-    - name: Перетаскиваем проект на прод
-      synchronize:
-        src: "{{ proj_dir }}/target/hello-1.0/*"
-        dest: rsync://s2/usr/local/tomcat/webapps/ROOT
-        mode: pull
-        recursive: true
