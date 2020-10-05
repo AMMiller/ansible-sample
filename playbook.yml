@@ -35,7 +35,7 @@
         dest: "{{ proj_dir }}"
 
     - name: Собираем проект
-      command: "mvn package -f {{ proj_dir }}/pom.xml"
+      shell: "mvn package -f {{ proj_dir }}/pom.xml"
 
     - name: Упаковываем
       archive:
