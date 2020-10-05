@@ -5,17 +5,6 @@
     ssh_key_filename: id_rsa_for_maven
 
   tasks:
-    - name: генерим SSH ключ командой тк версия ансибля < 2.8
-      command: "ssh-keygen -f ~/.ssh/{{ssh_key_filename}} -P '' "
-      args:
-        creates: "~/.ssh/{{ssh_key_filename}}"
-
-    - name: Утягиваем ключ
-      fetch:
-        src: "~/.ssh/{{ssh_key_filename}}.pub"
-        dest: "/tmp/{{ssh_key_filename}}.pub"
-        flat: true
-
     - name: Устанавливаем JDK
       apt:
         pkg: default-jdk
@@ -70,10 +59,22 @@
     ssh_key_filename: id_rsa_for_maven
 
   tasks:
-    - name: Передаем ключ от tomcata для копирования файлов
+    - name: генерим SSH ключ командой тк версия ансибля < 2.8
+      command: "ssh-keygen -f ~/.ssh/{{ssh_key_filename}} -P '' "
+      args:
+        creates: "~/.ssh/{{ssh_key_filename}}"
+
+    - name: Утягиваем ключ
+      fetch:
+        src: "~/.ssh/{{ssh_key_filename}}.pub"
+        dest: "/tmp/{{ssh_key_filename}}.pub"
+        flat: true
+
+    - name: Передаем ключ от mavena для копирования файлов
       copy:
         src: "/tmp/{{ssh_key_filename}}.pub"
         dest: "~/.ssh/authorized_keys"
+      delegate_to: tomcat
 
     # - name: Добавляем ключ в доверенные
     #  command: "cat /tmp/{{ssh_key_filename}}.pub >> ~/.ssh/authorized_keys"
