@@ -33,6 +33,7 @@
 
     - name: Упаковываем
       command: "tar -czf /tmp/hello.tar.gz {{ proj_dir }}/target/hello-1.0"
+      warn: false
 
     - name: Утягиваем проект
       copy:
@@ -94,14 +95,12 @@
 
     - name: Подчищаем корневую директорию томката
       command: "rm -rf {{ www_root }}/*"
-
-    - name: копируем проект
-      copy:
-        src: "/tmp/hello.tar.gz"
-        dest: "/tmp"
+      warn: false
 
     - name: разворачиваем в корень
-      command: "tar -xf /tmp/hello.tar.gz -C {{ www_root }}"
+      unarchive:
+        src: /tmp/hello.tar.gz
+        dest: "{{ www_root }}"
 
     - name: Стартуем томкат
       command: "{{ tomcat_dir }}/bin/startup.sh"
