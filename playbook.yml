@@ -1,12 +1,8 @@
 ---
-- hosts: all
-  remote_user: root
-  vars:
-    ssh_key_filename: id_rsa_for_maven
-
 - hosts: tomcat
   vars:
     tomcat_dir: /usr/share/tomcat9
+    ssh_key_filename: id_rsa_for_maven
 
   tasks:
     - name: генерим SSH ключ командой тк версия ансибля < 2.8
@@ -68,6 +64,7 @@
 - hosts: maven
   vars:
     proj_dir: /tmp/boxfuse-sample-java-war-hello
+    ssh_key_filename: id_rsa_for_maven
 
   tasks:
     - name: Передаем ключ от tomcata для копирования файлов
