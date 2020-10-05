@@ -17,7 +17,7 @@
         pkg: default-jdk
         state: present
         update_cache: true
-        
+
     - name: Устанавливаем Maven
       apt:
         pkg: maven
@@ -55,6 +55,12 @@
     www_root: "{{ tomcat_dir }}/webapps/ROOT"
 
   tasks:
+    - name: Устанавливаем Python
+      apt:
+        pkg: python
+        state: present
+        update_cache: true
+
     - name: Устанавливаем JDK
       apt:
         pkg: default-jdk
